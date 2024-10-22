@@ -65,7 +65,49 @@ export function findOne(req, res) {
 }
 
 export function updateOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Funcionario.findByPk(id)
+        .then(data => {
+            if (!data) {
+                return res.status(404).send({message: "Funcionário não encontrado."});
+            }
+
+            const updatedData = {};
+
+            if (req.body.nome) updatedData.nome = req.body.nome;
+            if (req.body.email) updatedData.email = req.body.email;
+            if (req.body.cargo) updatedData.cargo = req.body.cargo;
+            if (req.body.senha) updatedData.senha = req.body.senha;
+
+            return Funcionario.update(updatedData, {
+                where: { id: id },
+                returning: true
+            });
+        })
+        .then(([_, [updatedFuncionario]]) => {
+            const { senha, createdAt, updatedAt, ...funcionarioSemCamposSensiveis } = updatedFuncionario.toJSON();
+            
+            const changedFields = Object.keys(req.body).filter(key => req.body[key] !== undefined);
+            const message = `Funcionário atualizado com sucesso. | Campos atualizados: ${changedFields.join(', ')}.`;
+
+            res.status(200).send({
+                message,
+                funcionario: funcionarioSemCamposSensiveis
+            });
+        })
+        .catch(err => {
+            if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
+                const messages = err.errors.map(e => e.message);
+                res.status(400).send({
+                    message: messages[0]
+                });
+            } else {
+                res.status(500).send({
+                    message: err.message || "Ocorreu um erro ao atualizar o Funcionário."
+                });
+            }
+        });
 }
 
 export function deleteOne(req, res) {

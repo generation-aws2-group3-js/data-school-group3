@@ -71,7 +71,9 @@ export default (sequelize, Sequelize) => {
     }
   }, {
     hooks: {
-      afterValidate: async (funcionario) => funcionario.senha = await bcrypt.hash(funcionario.senha, 10)
+      afterValidate: (funcionario) => {
+        if (funcionario.senha) funcionario.senha = bcrypt.hashSync(funcionario.senha, 10);
+    }
     }
   });
 

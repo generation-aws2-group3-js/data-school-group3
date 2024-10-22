@@ -44,7 +44,24 @@ export function findAll(_, res) {
 }
 
 export function findOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Funcionario.findByPk(id, {
+        attributes: {
+            exclude: ['senha', 'createdAt', 'updatedAt']
+        }
+    })
+        .then(data => {
+            if (!data) {
+                return res.status(404).send({ message: "Funcionário não encontrado." });
+            }
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao buscar o Funcionário."
+            });
+        });
 }
 
 export function updateOne(req, res) {

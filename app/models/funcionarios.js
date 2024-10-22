@@ -16,7 +16,7 @@ export default (sequelize, Sequelize) => {
         },
         len: {
           args: [3, 150], // min 3 e max 150
-          msg: "O nome deve ter pelo menos 3 caracteres."
+          msg: "O nome deve ter pelo menos 3 caracteres. E no máximo 150 caracteres."
         }
       }
     },
@@ -45,7 +45,7 @@ export default (sequelize, Sequelize) => {
         },
         len: {
           args: [6, 30],
-          msg: "A senha deve ter pelo menos 6 caracteres."
+          msg: "A senha deve ter pelo menos 6 caracteres. E no máximo 30 caracteres."
         },
         is: {
           args: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,30}$/,
@@ -65,7 +65,7 @@ export default (sequelize, Sequelize) => {
         },
         len: {
           args: [5, 30],
-          msg: "O cargo deve ter pelo menos 5 caracteres."
+          msg: "O cargo deve ter pelo menos 5 caracteres. E no máximo 30 caracteres."
         }
       }
     }

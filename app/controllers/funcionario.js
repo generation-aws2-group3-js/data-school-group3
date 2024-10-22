@@ -27,8 +27,20 @@ export function create(req, res) {
         });
 };
 
-export function findAll(req, res) {
-    // implementar
+export function findAll(_, res) {
+    Funcionario.findAll({
+        attributes: {
+            exclude: ['senha', 'createdAt', 'updatedAt'] 
+        }
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao listar os Funcionários."
+            });
+        });
 }
 
 export function findOne(req, res) {

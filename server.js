@@ -34,6 +34,10 @@ app.use((err, req, res, next) => {
   if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
       const messages = err.errors.map(e => e.message);
       res.status(400).send({ message: messages[0] });
+  } else if (err.name === 'SequelizeForeignKeyConstraintError') {
+    res.status(400).send({
+        message: "O turma_id informado não existe na tabela turmas."
+    });
   } else {
       res.status(500).send({ message: err.message || "Ocorreu um erro no servidor." });
   }

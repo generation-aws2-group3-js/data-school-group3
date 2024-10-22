@@ -29,6 +29,16 @@ app.get("/", (req, res) => {
 // importa rotas
 routes(app);
 
+// tratamento de erros global
+app.use((err, req, res, next) => {
+  if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
+      const messages = err.errors.map(e => e.message);
+      res.status(400).send({ message: messages[0] });
+  } else {
+      res.status(500).send({ message: err.message || "Ocorreu um erro no servidor." });
+  }
+});
+
 // definindo portas e escutando as solicitações
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

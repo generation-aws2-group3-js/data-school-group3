@@ -1,7 +1,7 @@
 import db from "../models/index.js";
 const Funcionario = db.funcionarios;
 
-export function create(req, res) {
+export function create(req, res, next) {
     // implementar
 }
 
@@ -13,7 +13,7 @@ export function findOne(req, res) {
     // implementar
 }
 
-export function updateOne(req, res) {
+export function updateOne(req, res, next) {
     // implementar
 }
 

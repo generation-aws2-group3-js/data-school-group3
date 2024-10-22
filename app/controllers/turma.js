@@ -2,7 +2,16 @@ import db from "../models/index.js";
 const Turma = db.turmas;
 
 export function create(req, res, next) {
-    // implementar
+    const turma = {
+        nome: req.body.nome,
+        instrutor: req.body.instrutor
+    };
+
+    Turma.create(turma)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(next);
 }
 
 export function findAll(req, res) {

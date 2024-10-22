@@ -1,7 +1,7 @@
 import db from "../models/index.js";
 const Funcionario = db.funcionarios;
 
-export function create(req, res) {
+export function create(req, res, next) {
     const funcionario = {
         nome: req.body.nome,
         email: req.body.email,
@@ -13,25 +13,13 @@ export function create(req, res) {
         .then(data => {
         res.send(data);
         })
-        .catch(err => {
-        if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
-            const messages = err.errors.map(e => e.message);
-            res.status(400).send({
-            message: messages[0]
-            });
-        } else {
-            res.status(500).send({
-            message: err.message || "Ocorreu um erro ao criar o Funcionário."
-            });
-        }
-        });
+        .catch(next);
 };
 
 export function findAll(_, res) {
     Funcionario.findAll({
-        attributes: {
-            exclude: ['senha', 'createdAt', 'updatedAt'] 
-        }
+        attributes: {exclude: ['senha', 'createdAt', 'updatedAt']},
+        order: [['id', 'ASC']]
     })
         .then(data => {
             res.send(data);
@@ -47,14 +35,11 @@ export function findOne(req, res) {
     const id = req.params.id;
 
     Funcionario.findByPk(id, {
-        attributes: {
-            exclude: ['senha', 'createdAt', 'updatedAt']
-        }
+        attributes: {exclude: ['senha', 'createdAt', 'updatedAt']}
     })
         .then(data => {
-            if (!data) {
-                return res.status(404).send({ message: "Funcionário não encontrado." });
-            }
+            if (!data) return res.status(404).send({ message: "Funcionário não encontrado." });
+
             res.send(data);
         })
         .catch(err => {
@@ -64,14 +49,12 @@ export function findOne(req, res) {
         });
 }
 
-export function updateOne(req, res) {
+export function updateOne(req, res, next) {
     const id = req.params.id;
 
     Funcionario.findByPk(id)
         .then(data => {
-            if (!data) {
-                return res.status(404).send({message: "Funcionário não encontrado."});
-            }
+            if (!data) return res.status(404).send({message: "Funcionário não encontrado."});
 
             const updatedData = {};
 
@@ -96,18 +79,7 @@ export function updateOne(req, res) {
                 funcionario: funcionarioSemCamposSensiveis
             });
         })
-        .catch(err => {
-            if (err.name === 'SequelizeValidationError' || err.name === 'SequelizeUniqueConstraintError') {
-                const messages = err.errors.map(e => e.message);
-                res.status(400).send({
-                    message: messages[0]
-                });
-            } else {
-                res.status(500).send({
-                    message: err.message || "Ocorreu um erro ao atualizar o Funcionário."
-                });
-            }
-        });
+        .catch(next);
 }
 
 export function deleteOne(req, res) {
@@ -118,7 +90,7 @@ export function deleteOne(req, res) {
     })
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Funcionário não encontrado." });
-            
+
             res.send({ message: "Funcionário excluído com sucesso." });
         })
         .catch(err => {

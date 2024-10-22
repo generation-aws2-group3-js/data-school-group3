@@ -14,7 +14,7 @@ export function create(req, res, next) {
         res.send(data);
         })
         .catch(next);
-};
+}
 
 export function findAll(_, res) {
     Funcionario.findAll({

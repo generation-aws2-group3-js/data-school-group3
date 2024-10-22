@@ -87,7 +87,7 @@ export function updateOne(req, res) {
         })
         .then(([_, [updatedFuncionario]]) => {
             const { senha, createdAt, updatedAt, ...funcionarioSemCamposSensiveis } = updatedFuncionario.toJSON();
-            
+
             const changedFields = Object.keys(req.body).filter(key => req.body[key] !== undefined);
             const message = `Funcionário atualizado com sucesso. | Campos atualizados: ${changedFields.join(', ')}.`;
 
@@ -111,5 +111,19 @@ export function updateOne(req, res) {
 }
 
 export function deleteOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Funcionario.destroy({
+        where: { id: id }
+    })
+        .then(deleted => {
+            if (deleted === 0) return res.status(404).send({ message: "Funcionário não encontrado." });
+            
+            res.send({ message: "Funcionário excluído com sucesso." });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao excluir o Funcionário."
+            });
+        });
 }

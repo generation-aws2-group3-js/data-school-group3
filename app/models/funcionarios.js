@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 export default (sequelize, Sequelize) => {
   const Funcionarios = sequelize.define("funcionarios", {
     id: {
@@ -66,6 +68,10 @@ export default (sequelize, Sequelize) => {
           msg: "O cargo deve ter pelo menos 5 caracteres."
         }
       }
+    }
+  }, {
+    hooks: {
+      afterValidate: async (funcionario) => funcionario.senha = await bcrypt.hash(funcionario.senha, 10)
     }
   });
 

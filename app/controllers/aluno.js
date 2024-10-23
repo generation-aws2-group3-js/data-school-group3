@@ -77,6 +77,11 @@ export function updateOne(req, res, next) {
             if (req.body.nota_segundo_modulo) updatedData.nota_segundo_modulo = req.body.nota_segundo_modulo;
             if (req.body.turma_id) updatedData.turma_id = req.body.turma_id;
             
+            const nota1 = updatedData.nota_primeiro_modulo ? updatedData.nota_primeiro_modulo : data.nota_primeiro_modulo;
+            const nota2 = updatedData.nota_segundo_modulo ? updatedData.nota_segundo_modulo : data.nota_segundo_modulo;
+
+            if (nota1 !== null && nota2 !== null) updatedData.media = (nota1 + nota2) / 2;
+
             return Aluno.update(updatedData, {
                 where: { id: id },
                 returning: true

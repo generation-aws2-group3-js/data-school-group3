@@ -16,7 +16,7 @@ db.sequelize.sync()
     console.log("Failed to sync db: " + err.message);
   });
 
-// // apaga as tabelas se elas já existirem
+// apaga as tabelas se elas já existirem
 // db.sequelize.sync({ force: true }).then(() => {
 //   console.log("Drop and re-sync db.");
 // });

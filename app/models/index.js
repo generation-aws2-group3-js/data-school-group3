@@ -24,4 +24,13 @@ db.alunos = Alunos(sequelize, Sequelize);
 db.funcionarios = Funcionarios(sequelize, Sequelize);
 db.turmas = Turmas(sequelize, Sequelize);
 
+db.alunos.belongsTo(db.turmas, {
+  foreignKey: 'turma_id',
+  as: 'turma'
+});
+db.turmas.hasMany(db.alunos, {
+  foreignKey: 'turma_id',
+  as: 'alunos'
+});
+
 export default db;

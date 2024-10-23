@@ -15,17 +15,83 @@ export function create(req, res, next) {
 }
 
 export function findAll(req, res) {
-    // implementar
+    Turma.findAll({
+        attributes: {exclude: ['createdAt', 'updatedAt']},
+        order: [['id', 'ASC']]
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao listar os Funcionários."
+            });
+        });
 }
 
 export function findOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Turma.findByPk(id, {
+        attributes: {exclude: ['createdAt', 'updatedAt']}
+    })
+        .then(data => {
+            if (!data) return res.status(404).send({ message: "Turma não encontrada." });
+
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao buscar a Turma."
+            });
+        });
 }
 
 export function updateOne(req, res, next) {
-    // implementar
+    const id = req.params.id;
+
+    Turma.findByPk(id)
+        .then(data => {
+            if (!data) return res.status(404).send({message: "Turma não encontrada."});
+
+            const updatedData = {};
+
+            if (req.body.nome) updatedData.nome = req.body.nome;
+            if (req.body.instrutor) updatedData.instrutor = req.body.instrutor;
+            
+            return Turma.update(updatedData, {
+                where: { id: id },
+                returning: true
+            });
+        })
+        .then(([_, [updatedTurma]]) => {
+            const {createdAt, updatedAt, ...turmaSemCamposSensiveis } = updatedTurma.toJSON();
+
+            const changedFields = Object.keys(req.body).filter(key => req.body[key] !== undefined);
+            const message = `Turma atualizada com sucesso. | Campos atualizados: ${changedFields.join(', ')}.`;
+
+            res.status(200).send({
+                message,
+                turma: turmaSemCamposSensiveis
+            });
+        })
+        .catch(next);
 }
 
 export function deleteOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Turma.destroy({
+        where: { id: id }
+    })
+        .then(deleted => {
+            if (deleted === 0) return res.status(404).send({ message: "Turma não encontrada." });
+
+            res.send({ message: "Turma excluída com sucesso." });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao excluir a turma."
+            });
+        });
 }

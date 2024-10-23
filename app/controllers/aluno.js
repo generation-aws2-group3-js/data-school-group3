@@ -1,5 +1,6 @@
 import db from "../models/index.js";
 const Aluno = db.alunos;
+const Turma = db.turmas;
 
 export function create(req, res, next) {
     const aluno = {
@@ -24,17 +25,91 @@ export function create(req, res, next) {
 }
 
 export function findAll(req, res) {
-    res.send('funcionou')
+    Aluno.findAll({
+        attributes: {exclude: ['turma_id', 'createdAt', 'updatedAt']},
+        order: [['id', 'ASC']], 
+        include: [{model: Turma, as: 'turma', attributes: ['id', 'nome', 'instrutor']}]
+    })
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao listar os Funcionários."
+            });
+        });
 }
 
 export function findOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Aluno.findByPk(id, {
+        attributes: {
+            exclude: ['turma_id', 'createdAt', 'updatedAt']
+        },
+        include: [{model: Turma, as: 'turma', attributes: ['id', 'nome', 'instrutor']}]
+    })
+        .then(data => {
+            if (!data) return res.status(404).send({ message: "Aluno não encontrado." });
+
+            res.send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao buscar o Aluno."
+            });
+        });
 }
 
 export function updateOne(req, res, next) {
-    // implementar
+    const id = req.params.id;
+
+    Aluno.findByPk(id)
+        .then(data => {
+            if (!data) return res.status(404).send({message: "Aluno não encontrado."});
+
+            const updatedData = {};
+
+            if (req.body.nome) updatedData.nome = req.body.nome;
+            if (req.body.email) updatedData.email = req.body.email;
+            if (req.body.idade) updatedData.idade = req.body.idade;
+            if (req.body.nota_primeiro_modulo) updatedData.nota_primeiro_modulo = req.body.nota_primeiro_modulo;
+            if (req.body.nota_segundo_modulo) updatedData.nota_segundo_modulo = req.body.nota_segundo_modulo;
+            if (req.body.turma_id) updatedData.turma_id = req.body.turma_id;
+            
+            return Aluno.update(updatedData, {
+                where: { id: id },
+                returning: true
+            });
+        })
+        .then(([_, [updatedAluno]]) => {
+            const { senha, createdAt, updatedAt, ...alunoSemCamposSensiveis } = updatedAluno.toJSON();
+
+            const changedFields = Object.keys(req.body).filter(key => req.body[key] !== undefined);
+            const message = `Aluno atualizado com sucesso. | Campos atualizados: ${changedFields.join(', ')}.`;
+
+            res.status(200).send({
+                message,
+                aluno: alunoSemCamposSensiveis
+            });
+        })
+        .catch(next);
 }
 
 export function deleteOne(req, res) {
-    // implementar
+    const id = req.params.id;
+
+    Aluno.destroy({
+        where: { id: id }
+    })
+        .then(deleted => {
+            if (deleted === 0) return res.status(404).send({ message: "Aluno não encontrado." });
+
+            res.send({ message: "Aluno excluído com sucesso." });
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "Ocorreu um erro ao excluir o Aluno."
+            });
+        });
 }

@@ -26,7 +26,8 @@ db.turmas = Turmas(sequelize, Sequelize);
 
 db.alunos.belongsTo(db.turmas, {
   foreignKey: 'turma_id',
-  as: 'turma'
+  as: 'turma',
+  onDelete: 'SET NULL' // se a turma for deletada, ficará null no turma_id do aluno que antes era vinculado a turma
 });
 db.turmas.hasMany(db.alunos, {
   foreignKey: 'turma_id',

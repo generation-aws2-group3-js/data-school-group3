@@ -2,27 +2,58 @@ import express from "express";
 import * as AlunoController from "../controllers/aluno.js";
 import * as FuncionarioController from "../controllers/funcionario.js";
 import * as TurmaController from "../controllers/turma.js";
+import * as AuthController from "../controllers/authController.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config(); // Carrega as variáveis de ambiente do arquivo .env
 
 const router = express.Router();
 
-router.post("/alunos", AlunoController.create);
-router.get("/alunos", AlunoController.findAll);
-router.get("/alunos/:id", AlunoController.findOne);
-router.put("/alunos/:id", AlunoController.updateOne);
-router.delete("/alunos/:id", AlunoController.deleteOne);
+// Middleware para proteger rotas
+function verifyToken(req, res, next) {
+    const token = req.headers["authorization"];
+    
+    if (!token) {
+        return res.status(403).send({ message: "Nenhum token fornecido!" });
+    }
 
-router.post("/funcionarios", FuncionarioController.create);
-router.get("/funcionarios", FuncionarioController.findAll);
-router.get("/funcionarios/:id", FuncionarioController.findOne);
-router.put("/funcionarios/:id", FuncionarioController.updateOne);
-router.delete("/funcionarios/:id", FuncionarioController.deleteOne);
+    // Remover "Bearer " do token
+    const bearerToken = token.split(" ")[1];
 
-router.post("/turmas", TurmaController.create);
-router.get("/turmas", TurmaController.findAll);
-router.get("/turmas/:id", TurmaController.findOne);
-router.put("/turmas/:id", TurmaController.updateOne);
-router.delete("/turmas/:id", TurmaController.deleteOne);
+    jwt.verify(bearerToken, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: "Falha ao autenticar o token." });
+        }
+        req.userId = decoded.id;
+        next();
+    });
+}
+
+// Rota de login (sem proteção)
+router.post("/login", AuthController.login);
+
+// Rotas protegidas por autenticação
+router.post("/alunos", verifyToken, AlunoController.create);
+router.get("/alunos", verifyToken, AlunoController.findAll);
+router.get("/alunos/:id", verifyToken, AlunoController.findOne);
+router.put("/alunos/:id", verifyToken, AlunoController.updateOne);
+router.delete("/alunos/:id", verifyToken, AlunoController.deleteOne);
+
+router.post("/funcionarios", FuncionarioController.create); // Cadastro de funcionários não requer token
+router.get("/funcionarios", verifyToken, FuncionarioController.findAll);
+router.get("/funcionarios/:id", verifyToken, FuncionarioController.findOne);
+router.put("/funcionarios/:id", verifyToken, FuncionarioController.updateOne);
+router.delete("/funcionarios/:id", verifyToken, FuncionarioController.deleteOne);
+
+router.post("/turmas", verifyToken, TurmaController.create);
+router.get("/turmas", verifyToken, TurmaController.findAll);
+router.get("/turmas/:id", verifyToken, TurmaController.findOne);
+router.put("/turmas/:id", verifyToken, TurmaController.updateOne);
+router.delete("/turmas/:id", verifyToken, TurmaController.deleteOne);
 
 export const routes = (app) => {
-  app.use("/api", router);
+    app.use("/api", router);
 };
+
+

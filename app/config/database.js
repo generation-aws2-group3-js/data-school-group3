@@ -9,4 +9,3 @@ export const pool = {
     acquire: 30000,
     idle: 10000
 };
-  

@@ -36,10 +36,5 @@ export default (sequelize, Sequelize) => {
     }
   });
 
-  Turmas.hasMany(sequelize.models.alunos, {
-    foreignKey: 'turma_id',
-    as: 'alunos'
-  });
-
   return Turmas;
 };

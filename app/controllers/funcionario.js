@@ -1,36 +1,5 @@
 import db from "../models/index.js";
-import bcrypt from "bcrypt"; // Importa bcrypt para verificar a senha
-import jwt from "jsonwebtoken"; // Importa jsonwebtoken para gerar o token
-
 const Funcionario = db.funcionarios;
-
-export function login(req, res) {
-    const { email, senha } = req.body;
-
-    Funcionario.findOne({ where: { email } })
-        .then(funcionario => {
-            if (!funcionario) {
-                return res.status(401).json({ message: "Email ou senha inválidos." });
-            }
-
-            // Verifica se a senha está correta
-            const isValidPassword = bcrypt.compareSync(senha, funcionario.senha);
-            if (!isValidPassword) {
-                return res.status(401).json({ message: "Email ou senha inválidos." });
-            }
-
-            // Gera um token JWT
-            const token = jwt.sign({ id: funcionario.id, email: funcionario.email }, process.env.JWT_SECRET, {
-                expiresIn: "3h" // O token expira em 3 horas
-            });
-
-            // Retorna o token e uma mensagem de sucesso
-            res.status(200).json({ message: "Login bem-sucedido!", token });
-        })
-        .catch(err => {
-            res.status(500).json({ message: err.message || "Erro ao realizar login." });
-        });
-}
 
 export function create(req, res, next) {
     const funcionario = {

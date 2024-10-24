@@ -30,17 +30,11 @@ function verifyToken(req, res, next) {
     });
 }
 
-// Rota de login (sem proteção)
+// rotas publicas
 router.post("/login", AuthController.login);
+router.post("/funcionarios", FuncionarioController.create);
 
-// Rotas protegidas por autenticação
-router.post("/alunos", verifyToken, AlunoController.create);
-router.get("/alunos", verifyToken, AlunoController.findAll);
-router.get("/alunos/:id", verifyToken, AlunoController.findOne);
-router.put("/alunos/:id", verifyToken, AlunoController.updateOne);
-router.delete("/alunos/:id", verifyToken, AlunoController.deleteOne);
-
-router.post("/funcionarios", FuncionarioController.create); // Cadastro de funcionários não requer token
+// rotas privadas
 router.get("/funcionarios", verifyToken, FuncionarioController.findAll);
 router.get("/funcionarios/:id", verifyToken, FuncionarioController.findOne);
 router.put("/funcionarios/:id", verifyToken, FuncionarioController.updateOne);
@@ -51,6 +45,12 @@ router.get("/turmas", verifyToken, TurmaController.findAll);
 router.get("/turmas/:id", verifyToken, TurmaController.findOne);
 router.put("/turmas/:id", verifyToken, TurmaController.updateOne);
 router.delete("/turmas/:id", verifyToken, TurmaController.deleteOne);
+
+router.post("/alunos", verifyToken, AlunoController.create);
+router.get("/alunos", verifyToken, AlunoController.findAll);
+router.get("/alunos/:id", verifyToken, AlunoController.findOne);
+router.put("/alunos/:id", verifyToken, AlunoController.updateOne);
+router.delete("/alunos/:id", verifyToken, AlunoController.deleteOne);
 
 export const routes = (app) => {
     app.use("/api", router);

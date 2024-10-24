@@ -1,5 +1,6 @@
 import db from "../models/index.js";
 const Turma = db.turmas;
+const Aluno = db.alunos;
 
 export function create(req, res, next) {
     const turma = {
@@ -33,7 +34,14 @@ export function findOne(req, res) {
     const id = req.params.id;
 
     Turma.findByPk(id, {
-        attributes: {exclude: ['createdAt', 'updatedAt']}
+        attributes: {
+            exclude: ['createdAt', 'updatedAt']
+        },
+        include: [{
+            model: Aluno,
+            as: 'alunos',
+            attributes: ['id', 'nome', 'nota_primeiro_modulo', 'nota_segundo_modulo', 'media']
+        }]
     })
         .then(data => {
             if (!data) return res.status(404).send({ message: "Turma não encontrada." });

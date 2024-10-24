@@ -110,7 +110,7 @@ export function deleteOne(req, res) {
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Aluno não encontrado." });
 
-            res.status(204).send({ message: "Aluno excluído com sucesso." });
+            res.status(204).send();
         })
         .catch(err => {
             res.status(500).send({

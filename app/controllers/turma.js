@@ -95,7 +95,7 @@ export function deleteOne(req, res) {
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Turma não encontrada." });
 
-            res.status(204).send({ message: "Turma excluída com sucesso." });
+            res.status(204).send();
         })
         .catch(err => {
             res.status(500).send({

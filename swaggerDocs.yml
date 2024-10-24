@@ -1,0 +1,521 @@
+openapi: 3.0.0
+info:
+  title: EduDataHub API
+  description: API para gerenciamento de dados de uma escola, incluindo alunos, turmas e funcionários.
+  version: 1.0.0
+
+tags:
+  - name: Autenticação
+    description: Operações de autenticação de funcionários.
+  - name: Funcionários
+    description: Operações relacionadas a funcionários.
+  - name: Turmas
+    description: Operações relacionadas a turmas.
+  - name: Alunos
+    description: Operações relacionadas a alunos.
+
+paths:
+  /api/login:
+    post:
+      tags:
+        - Autenticação
+      summary: Realizar login na aplicação
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginInput'
+      responses:
+        '200':
+          description: Login realizado com sucesso
+        '401':
+          description: Credenciais inválidas
+        '500':
+          description: Erro interno do servidor
+
+  /api/funcionarios:
+    post:
+      tags:
+        - Funcionários
+      summary: Cadastro de um novo funcionário
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FuncionarioInput'
+      responses:
+        '201':
+          description: Funcionário cadastrado com sucesso
+        '400':
+          description: Dados inválidos
+        '500':
+          description: Erro interno do servidor
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Funcionários
+      summary: Listar todos os funcionários
+      responses:
+        '200':
+          description: Lista de funcionários
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Funcionario'
+        '500':
+          description: Erro interno do servidor
+
+  /api/funcionarios/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Funcionários
+      summary: Obter detalhes de um funcionário específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do funcionário
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalhes do funcionário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '404':
+          description: Funcionário não encontrado
+        '500':
+          description: Erro interno do servidor
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Funcionários
+      summary: Atualizar informações de um funcionário
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do funcionário
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FuncionarioInput'
+      responses:
+        '200':
+          description: Funcionário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Funcionario'
+        '404':
+          description: Funcionário não encontrado
+        '500':
+          description: Erro interno do servidor
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Funcionários
+      summary: Deletar um funcionário
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do funcionário
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Funcionário deletado com sucesso
+        '404':
+          description: Funcionário não encontrado
+        '500':
+          description: Erro interno do servidor
+
+  /api/turmas:
+    post:
+        security:
+          - bearerAuth: []
+        tags:
+          - Turmas
+        summary: Criar uma nova turma
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TurmaInput'
+        responses:
+          '201':
+            description: Turma criada com sucesso
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/Turma'
+          '400':
+            description: Dados inválidos
+          '500':
+            description: Erro interno do servidor
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Turmas
+      summary: Listar todas as turmas
+      responses:
+        '200':
+          description: Lista de turmas
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Turma'
+        '500':
+          description: Erro interno do servidor
+
+  /api/turmas/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Turmas
+      summary: Obter detalhes de uma turma específica
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID da turma
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalhes da turma
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Turma'
+        '404':
+          description: Turma não encontrada
+        '500':
+          description: Erro interno do servidor
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Turmas
+      summary: Atualizar informações de uma turma
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID da turma
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TurmaInput'
+      responses:
+        '200':
+          description: Turma atualizada com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Turma'
+        '404':
+          description: Turma não encontrada
+        '500':
+          description: Erro interno do servidor
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Turmas
+      summary: Deletar uma turma
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID da turma
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Turma deletada com sucesso
+        '404':
+          description: Turma não encontrada
+        '500':
+          description: Erro interno do servidor
+
+  /api/alunos:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+        - Alunos
+      summary: Criar um novo aluno
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlunoInput'
+      responses:
+        '201':
+          description: Aluno criado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+        '400':
+            description: Dados inválidos
+        '500':
+          description: Erro interno do servidor
+
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Alunos
+      summary: Listar todos os alunos
+      responses:
+        '200':
+          description: Lista de alunos
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Aluno'
+        '500':
+          description: Erro interno do servidor
+
+  /api/alunos/{id}:
+    get:
+      security:
+        - bearerAuth: []
+      tags:
+        - Alunos
+      summary: Obter detalhes de um aluno específico
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do aluno
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalhes do aluno
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+        '404':
+          description: Aluno não encontrado
+        '500':
+          description: Erro interno do servidor
+
+    put:
+      security:
+        - bearerAuth: []
+      tags:
+        - Alunos
+      summary: Atualizar informações de um aluno
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do aluno
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlunoInput'
+      responses:
+        '200':
+          description: Aluno atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Aluno'
+        '404':
+          description: Aluno não encontrado
+        '500':
+          description: Erro interno do servidor
+
+    delete:
+      security:
+        - bearerAuth: []
+      tags:
+        - Alunos
+      summary: Deletar um aluno
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID do aluno
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Aluno deletado com sucesso
+        '404':
+          description: Aluno não encontrado
+        '500':
+          description: Erro interno do servidor
+
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "ana.souza@example.com"
+        senha:
+          type: string
+          example: "senhaSegura123@"
+
+    Funcionario:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "João da Silva"
+        email:
+          type: string
+          example: "joao.silva@example.com"
+        cargo:
+          type: string
+          example: "Professor"
+
+    FuncionarioInput:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Ana Souza"
+        email:
+          type: string
+          example: "ana.souza@example.com"
+        senha:
+          type: string
+          example: "senhaSegura123@"
+        cargo:
+          type: string
+          example: "Coordenador"
+
+    Turma:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Turma A"
+        instrutor:
+          type: string
+          example: "João da Silva"
+
+    TurmaInput:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Turma B"
+        instrutor:
+          type: string
+          example: "Maria Pereira"
+        
+    Aluno:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: "Maria da Silva"
+        email:
+          type: string
+          example: "maria.silva@example.com"
+        idade:
+          type: integer
+          example: 20
+        nota_primeiro_modulo:
+          type: number
+          format: float
+          example: 7.5
+        nota_segundo_modulo:
+          type: number
+          format: float
+          example: 8.0
+        media:
+          type: number
+          format: float
+          example: 7.75
+        turma_id:
+          type: integer
+          example: 1
+
+    AlunoInput:
+      type: object
+      properties:
+        nome:
+          type: string
+          example: "Carlos Pereira"
+        email:
+          type: string
+          example: "carlos.pereira@example.com"
+        idade:
+          type: integer
+          example: 22
+        nota_primeiro_modulo:
+          type: number
+          format: float
+          example: 9.0
+        nota_segundo_modulo:
+          type: number
+          format: float
+          example: 8.5
+        turma_id:
+          type: integer
+          example: 1

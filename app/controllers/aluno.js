@@ -19,7 +19,7 @@ export function create(req, res, next) {
 
     Aluno.create(aluno)
         .then(data => {
-            res.send(data);
+            res.status(201).send(data);
         })
         .catch(next)
 }
@@ -31,7 +31,7 @@ export function findAll(req, res) {
         include: [{model: Turma, as: 'turma', attributes: ['id', 'nome', 'instrutor']}]
     })
         .then(data => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -52,7 +52,7 @@ export function findOne(req, res) {
         .then(data => {
             if (!data) return res.status(404).send({ message: "Aluno não encontrado." });
 
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -110,7 +110,7 @@ export function deleteOne(req, res) {
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Aluno não encontrado." });
 
-            res.send({ message: "Aluno excluído com sucesso." });
+            res.status(204).send();
         })
         .catch(err => {
             res.status(500).send({

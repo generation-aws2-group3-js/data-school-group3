@@ -11,7 +11,7 @@ export function create(req, res, next) {
 
     Funcionario.create(funcionario)
         .then(data => {
-        res.send(data);
+        res.status(201).send(data);
         })
         .catch(next);
 }
@@ -22,7 +22,7 @@ export function findAll(_, res) {
         order: [['id', 'ASC']]
     })
         .then(data => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -40,7 +40,7 @@ export function findOne(req, res) {
         .then(data => {
             if (!data) return res.status(404).send({ message: "Funcionário não encontrado." });
 
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -91,7 +91,7 @@ export function deleteOne(req, res) {
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Funcionário não encontrado." });
 
-            res.send({ message: "Funcionário excluído com sucesso." });
+            res.status(204).send();
         })
         .catch(err => {
             res.status(500).send({

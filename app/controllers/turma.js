@@ -10,7 +10,7 @@ export function create(req, res, next) {
 
     Turma.create(turma)
         .then(data => {
-            res.send(data);
+            res.status(201).send(data);
         })
         .catch(next);
 }
@@ -21,7 +21,7 @@ export function findAll(req, res) {
         order: [['id', 'ASC']]
     })
         .then(data => {
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -46,7 +46,7 @@ export function findOne(req, res) {
         .then(data => {
             if (!data) return res.status(404).send({ message: "Turma não encontrada." });
 
-            res.send(data);
+            res.status(200).send(data);
         })
         .catch(err => {
             res.status(500).send({
@@ -95,7 +95,7 @@ export function deleteOne(req, res) {
         .then(deleted => {
             if (deleted === 0) return res.status(404).send({ message: "Turma não encontrada." });
 
-            res.send({ message: "Turma excluída com sucesso." });
+            res.status(204).send({ message: "Turma excluída com sucesso." });
         })
         .catch(err => {
             res.status(500).send({

@@ -1,8 +1,9 @@
-import { DB, USER, PASSWORD, HOST, dialect as _dialect, pool as _pool } from "../config/database.js";
+import { DB, USER, PASSWORD, HOST, PORT, dialect as _dialect, pool as _pool } from "../config/database.js";
 
 import Sequelize from "sequelize";
 const sequelize = new Sequelize(DB, USER, PASSWORD, {
   host: HOST,
+  port: PORT,
   dialect: _dialect,
   pool: {
     max: _pool.max,

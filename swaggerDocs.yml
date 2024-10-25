@@ -68,6 +68,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Funcionario'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '500':
           description: Erro interno do servidor
 
@@ -92,6 +96,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Funcionario'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Funcionário não encontrado
         '500':
@@ -123,6 +131,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Funcionario'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Funcionário não encontrado
         '500':
@@ -144,6 +156,10 @@ paths:
       responses:
         '204':
           description: Funcionário deletado com sucesso
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Funcionário não encontrado
         '500':
@@ -171,6 +187,10 @@ paths:
                   $ref: '#/components/schemas/Turma'
           '400':
             description: Dados inválidos
+          '401':
+            description: Token inválido	
+          '403':
+            description: Nenhum Token fornecido
           '500':
             description: Erro interno do servidor
 
@@ -189,6 +209,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Turma'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '500':
           description: Erro interno do servidor
 
@@ -213,6 +237,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Turma'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Turma não encontrada
         '500':
@@ -244,6 +272,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Turma'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Turma não encontrada
         '500':
@@ -265,6 +297,10 @@ paths:
       responses:
         '204':
           description: Turma deletada com sucesso
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Turma não encontrada
         '500':
@@ -292,6 +328,10 @@ paths:
                 $ref: '#/components/schemas/Aluno'
         '400':
             description: Dados inválidos
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '500':
           description: Erro interno do servidor
 
@@ -310,6 +350,10 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Aluno'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '500':
           description: Erro interno do servidor
 
@@ -334,6 +378,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aluno'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Aluno não encontrado
         '500':
@@ -365,6 +413,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Aluno'
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Aluno não encontrado
         '500':
@@ -386,6 +438,10 @@ paths:
       responses:
         '204':
           description: Aluno deletado com sucesso
+        '401':
+          description: Token inválido	
+        '403':
+          description: Nenhum Token fornecido
         '404':
           description: Aluno não encontrado
         '500':
